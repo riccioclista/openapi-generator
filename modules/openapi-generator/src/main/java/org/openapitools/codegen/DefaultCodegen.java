@@ -206,6 +206,7 @@ public class DefaultCodegen implements CodegenConfig {
     protected String removeOperationIdPrefixDelimiter = "_";
     protected int removeOperationIdPrefixCount = 1;
     protected boolean removePathParamsFromOperationId;
+    protected boolean removeTagElementFromOperationId;
     protected boolean skipOperationExample;
 
     protected final static Pattern XML_MIME_PATTERN = Pattern.compile("(?i)application\\/(.*)[+]?xml(;.*)?");
@@ -391,6 +392,11 @@ public class DefaultCodegen implements CodegenConfig {
         if (additionalProperties.containsKey(CodegenConstants.REMOVE_PATH_PARAMS_FROM_OPERATION_ID)) {
             this.setRemovePathParamsFromOperationId(Boolean.parseBoolean(additionalProperties
                     .get(CodegenConstants.REMOVE_PATH_PARAMS_FROM_OPERATION_ID).toString()));
+        }
+
+        if (additionalProperties.containsKey(CodegenConstants.REMOVE_TAG_ELEMENT_FROM_OPERATION_ID)) {
+            this.setRemoveTagElementFromOperationId(Boolean.parseBoolean(additionalProperties
+                    .get(CodegenConstants.REMOVE_TAG_ELEMENT_FROM_OPERATION_ID).toString()));
         }
 
         if (additionalProperties.containsKey(CodegenConstants.SKIP_OPERATION_EXAMPLE)) {
@@ -5555,8 +5561,15 @@ public class DefaultCodegen implements CodegenConfig {
                 // must be root tmpPath
                 builder.append("root");
             }
+            var tags = operation.getTags();
+            var tag = tags != null ? operation.getTags().stream().findFirst() : Optional.empty();
+            boolean removed = false;
             for (String part : parts) {
                 if (part.length() > 0) {
+                    if (removeTagElementFromOperationId && !removed && tag.isPresent() && part.equals(tag.get())) {
+                        removed = true;
+                        continue;
+                    }
                     if (builder.toString().length() == 0) {
                         part = Character.toLowerCase(part.charAt(0)) + part.substring(1);
                     } else {
@@ -6100,6 +6113,10 @@ public class DefaultCodegen implements CodegenConfig {
 
     public void setRemovePathParamsFromOperationId(boolean removePathParamsFromOperationId) {
         this.removePathParamsFromOperationId = removePathParamsFromOperationId;
+    }
+
+    public void setRemoveTagElementFromOperationId(boolean removeTagElementFromOperationId) {
+        this.removeTagElementFromOperationId = removeTagElementFromOperationId;
     }
 
     @Override

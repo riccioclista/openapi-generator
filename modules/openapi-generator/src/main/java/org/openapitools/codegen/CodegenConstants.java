@@ -338,6 +338,9 @@ public class CodegenConstants {
     public static final String REMOVE_PATH_PARAMS_FROM_OPERATION_ID = "removePathParamsFromOperationId";
     public static final String REMOVE_PATH_PARAMS_FROM_OPERATION_ID_DESC = "remove any URL path parameters from the operationId.";
 
+    public static final String REMOVE_TAG_ELEMENT_FROM_OPERATION_ID = "removeTagElementFromOperationId";
+    public static final String REMOVE_TAG_ELEMENT_FROM_OPERATION_ID_DESC = "remove the tag portion of the URL path from the operationId.";
+    
     public static final String SKIP_OPERATION_EXAMPLE = "skipOperationExample";
     public static final String SKIP_OPERATION_EXAMPLE_DESC = "Skip examples defined in operations to avoid out of memory errors.";
 
