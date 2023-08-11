@@ -32,6 +32,7 @@ import org.openapitools.codegen.model.ModelsMap;
 import org.openapitools.codegen.model.OperationsMap;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -340,5 +341,9 @@ public interface CodegenConfig {
     boolean getAddSuffixToDuplicateOperationNicknames();
 
     boolean getUseOpenAPINormalizer();
+
+    ArrayList<String> getIgnorePaths();
+
+    ArrayList<String> getIgnoreSchemas();
 
 }

@@ -284,6 +284,9 @@ public class DefaultCodegen implements CodegenConfig {
     protected boolean enumUnknownDefaultCase = false;
     protected String enumUnknownDefaultCaseName = "unknown_default_open_api";
 
+    protected ArrayList<String> ignorePaths = null;
+    protected ArrayList<String> ignoreSchemas = null;
+
     // make openapi available to all methods
     protected OpenAPI openAPI;
 
@@ -435,6 +438,16 @@ public class DefaultCodegen implements CodegenConfig {
         if (additionalProperties.containsKey(CodegenConstants.ENUM_UNKNOWN_DEFAULT_CASE)) {
             this.setEnumUnknownDefaultCase(Boolean.parseBoolean(additionalProperties
                     .get(CodegenConstants.ENUM_UNKNOWN_DEFAULT_CASE).toString()));
+        }
+        if (additionalProperties.containsKey(CodegenConstants.IGNORE_PATHS)) {
+            @SuppressWarnings("unchecked")
+            var val = (ArrayList<String>)additionalProperties.get(CodegenConstants.IGNORE_PATHS);
+            this.setIgnorePaths(val);
+        }
+        if (additionalProperties.containsKey(CodegenConstants.IGNORE_SCHEMAS)) {
+            @SuppressWarnings("unchecked")
+            var val = (ArrayList<String>)additionalProperties.get(CodegenConstants.IGNORE_SCHEMAS);
+            this.setIgnoreSchemas(val);
         }
     }
 
@@ -1497,6 +1510,22 @@ public class DefaultCodegen implements CodegenConfig {
 
     public void setEnumUnknownDefaultCase(boolean val) {
         this.enumUnknownDefaultCase = val;
+    }
+
+    public ArrayList<String> getIgnorePaths() {
+        return this.ignorePaths;
+    }
+
+    public void setIgnorePaths(ArrayList<String> val) {
+        this.ignorePaths = val;
+    }
+
+    public ArrayList<String> getIgnoreSchemas() {
+        return this.ignoreSchemas;
+    }
+
+    public void setIgnoreSchemas(ArrayList<String> val) {
+        this.ignoreSchemas = val;
     }
 
     public Boolean getAllowUnicodeIdentifiers() {

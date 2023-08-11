@@ -433,13 +433,31 @@ public class DefaultGenerator implements Generator {
             return;
         }
 
+        ArrayList<String> ignoreSchemas = config.getIgnoreSchemas();
+        Set<String> modelKeys;
+        if (ignoreSchemas == null) {
+            modelKeys = schemas.keySet();
+        } else {
+            modelKeys = new HashSet<>();
+            for (String key : schemas.keySet()) {
+                if (!ignoreSchemas.stream().anyMatch(is -> {
+                    if (key.matches(is)) {
+                        LOGGER.info("Ignoring schema '{}' because it is matched by the pattern '{}' in the ignoreSchemas list.", key, is);
+                        return true;
+                    }
+                    return false;
+                })) {
+                    modelKeys.add(key);
+                }
+            }
+        }
+
         String modelNames = GlobalSettings.getProperty("models");
         Set<String> modelsToGenerate = null;
         if (modelNames != null && !modelNames.isEmpty()) {
             modelsToGenerate = new HashSet<>(Arrays.asList(modelNames.split(",")));
         }
 
-        Set<String> modelKeys = schemas.keySet();
         if (modelsToGenerate != null && !modelsToGenerate.isEmpty()) {
             Set<String> updatedKeys = new HashSet<>();
             for (String m : modelKeys) {
@@ -1128,6 +1146,19 @@ public class DefaultGenerator implements Generator {
     private void processOperation(String resourcePath, String httpMethod, Operation operation, Map<String, List<CodegenOperation>> operations, PathItem path) {
         if (operation == null) {
             return;
+        }
+
+        var ignorePaths = config.getIgnorePaths();
+        if (ignorePaths != null) {
+            if (ignorePaths.stream().anyMatch(ip -> {
+                    if (resourcePath.matches(ip)) {
+                        LOGGER.info("Ignoring '{}' because it is matched by the pattern '{}' the ignorePaths list.", resourcePath, ip);
+                        return true;
+                    }
+                    return false;
+                })) {
+                return;
+            }
         }
 
         if (GlobalSettings.getProperty("debugOperations") != null) {
