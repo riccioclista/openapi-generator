@@ -205,6 +205,7 @@ public class DefaultCodegen implements CodegenConfig {
     protected boolean removeOperationIdPrefix;
     protected String removeOperationIdPrefixDelimiter = "_";
     protected int removeOperationIdPrefixCount = 1;
+    protected boolean removePathParamsFromOperationId;
     protected boolean skipOperationExample;
 
     protected final static Pattern XML_MIME_PATTERN = Pattern.compile("(?i)application\\/(.*)[+]?xml(;.*)?");
@@ -385,6 +386,11 @@ public class DefaultCodegen implements CodegenConfig {
         if (additionalProperties.containsKey(CodegenConstants.REMOVE_OPERATION_ID_PREFIX_COUNT)) {
             this.setRemoveOperationIdPrefixCount(Integer.parseInt(additionalProperties
                     .get(CodegenConstants.REMOVE_OPERATION_ID_PREFIX_COUNT).toString()));
+        }
+
+        if (additionalProperties.containsKey(CodegenConstants.REMOVE_PATH_PARAMS_FROM_OPERATION_ID)) {
+            this.setRemovePathParamsFromOperationId(Boolean.parseBoolean(additionalProperties
+                    .get(CodegenConstants.REMOVE_PATH_PARAMS_FROM_OPERATION_ID).toString()));
         }
 
         if (additionalProperties.containsKey(CodegenConstants.SKIP_OPERATION_EXAMPLE)) {
@@ -5537,8 +5543,12 @@ public class DefaultCodegen implements CodegenConfig {
         String operationId = operation.getOperationId();
         if (StringUtils.isBlank(operationId)) {
             String tmpPath = path;
-            tmpPath = tmpPath.replaceAll("\\{", "");
-            tmpPath = tmpPath.replaceAll("\\}", "");
+            if (removePathParamsFromOperationId) {
+                tmpPath = tmpPath.replaceAll("/?\\{[0-9,a-z,A-Z,_]*\\}", "");
+            } else {
+                tmpPath = tmpPath.replaceAll("\\{", "");
+                tmpPath = tmpPath.replaceAll("\\}", "");
+            }
             String[] parts = (tmpPath + "/" + httpMethod).split("/");
             StringBuilder builder = new StringBuilder();
             if ("/".equals(tmpPath)) {
@@ -6086,6 +6096,10 @@ public class DefaultCodegen implements CodegenConfig {
 
     public void setRemoveOperationIdPrefixCount(int removeOperationIdPrefixCount) {
         this.removeOperationIdPrefixCount = removeOperationIdPrefixCount;
+    }
+
+    public void setRemovePathParamsFromOperationId(boolean removePathParamsFromOperationId) {
+        this.removePathParamsFromOperationId = removePathParamsFromOperationId;
     }
 
     @Override

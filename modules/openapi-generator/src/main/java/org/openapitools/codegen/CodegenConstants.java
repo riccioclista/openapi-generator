@@ -335,6 +335,9 @@ public class CodegenConstants {
     public static final String REMOVE_OPERATION_ID_PREFIX_COUNT = "removeOperationIdPrefixCount";
     public static final String REMOVE_OPERATION_ID_PREFIX_COUNT_DESC = "Count of delimiter for the prefix. Use -1 for last Default: 1";
 
+    public static final String REMOVE_PATH_PARAMS_FROM_OPERATION_ID = "removePathParamsFromOperationId";
+    public static final String REMOVE_PATH_PARAMS_FROM_OPERATION_ID_DESC = "remove any URL path parameters from the operationId.";
+
     public static final String SKIP_OPERATION_EXAMPLE = "skipOperationExample";
     public static final String SKIP_OPERATION_EXAMPLE_DESC = "Skip examples defined in operations to avoid out of memory errors.";
 
