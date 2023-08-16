@@ -72,6 +72,7 @@ import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.removeStart;
 import static org.openapitools.codegen.utils.OnceLogger.once;
+import static org.openapitools.codegen.utils.StringUtils.camelize;
 
 @SuppressWarnings("rawtypes")
 public class DefaultGenerator implements Generator {
@@ -659,6 +660,10 @@ public class DefaultGenerator implements Generator {
                     operation.put("hasModel", false);
                 } else {
                     operation.put("hasModel", true);
+                }
+
+                for (var t : paths.keySet()) {
+                    operation.put(String.format(Locale.ROOT, "is%s", camelize(t)), t.equals(tag));
                 }
 
                 if (!config.vendorExtensions().isEmpty()) {
